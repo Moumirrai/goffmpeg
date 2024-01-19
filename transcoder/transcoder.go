@@ -10,8 +10,10 @@ import (
 	"io"
 	"os/exec"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"github.com/xfrr/goffmpeg"
 	"github.com/xfrr/goffmpeg/media"
@@ -185,6 +187,12 @@ func (t *Transcoder) Initialize(inputPath string, outputPath string) error {
 	cmd.Stdout = &outb
 	cmd.Stderr = &errb
 
+	if runtime.GOOS == "windows" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow: true,
+		}
+	}
+
 	err = cmd.Run()
 	if err != nil {
 		return fmt.Errorf("error executing (%s) | error: %s | message: %s %s", command, err, outb.String(), errb.String())
@@ -218,6 +226,11 @@ func (t *Transcoder) Run(progress bool) <-chan error {
 	}
 
 	proc := exec.Command(t.configuration.FFmpegBinPath(), command...)
+	if runtime.GOOS == "windows" {
+		proc.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow: true,
+		}
+	}
 	if progress {
 		errStream, err := proc.StderrPipe()
 		if err != nil {
