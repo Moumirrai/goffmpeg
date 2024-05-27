@@ -15,9 +15,9 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/xfrr/goffmpeg"
-	"github.com/xfrr/goffmpeg/media"
-	"github.com/xfrr/goffmpeg/pkg/duration"
+	"github.com/moumirrai/goffmpeg"
+	"github.com/moumirrai/goffmpeg/media"
+	"github.com/moumirrai/goffmpeg/pkg/duration"
 )
 
 // Transcoder Main struct
